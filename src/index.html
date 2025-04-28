@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compare List</title>
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 100vw;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      padding: 1rem;
+    }
+
+    .parent {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: auto;
+      gap: 1.5rem;
+    }
+
+    .parent > div {
+      background: #ffffff;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .parent > div label {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    img {
+     display: inline-block;
+     width: 100px;
+     height: 60px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 250px;
+      resize: vertical;
+      padding: 0.75rem;
+      font-size: 0.95rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    textarea:focus {
+      border-color: #4a90e2;
+      background-color: #f0f8ff;
+    }
+
+    .div7 {
+      grid-column: span 2;
+    }
+
+    .list-title {
+      display: block;
+      margin-bottom: 15px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .parent {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="parent">
+      <div class="div1">
+        <div class="list-title">
+          List 1
+        </div>
+        <textarea id="list_1" name="w3review" rows="20" cols="50"></textarea>
+      </div>
+      <div class="div2">
+        <div class="list-title">
+          List 2
+        </div>
+        <textarea id="list_2" name="w3review" rows="20" cols="50"></textarea>
+      </div>
+      <div class="div3">
+        <div class="list-title">
+          <img src="./difference-1-only.png" alt="Difference - 1 only" />
+          <span>Difference - 1 only</span>
+        </div>
+        <textarea id="one_only" name="w3review" rows="20" cols="50"></textarea>
+      </div>
+      <div class="div4">
+
+        <div class="list-title">
+          <img src="./difference-2-only.png" alt="Difference - 1 only" />
+          <span>Difference - 2 only</span>
+        </div>
+        <textarea id="two_only" name="w3review" rows="20" cols="50"></textarea>
+      </div>
+      <div class="div5">
+
+        <div class="list-title">
+          <img src="./intersection.png" alt="Difference - 1 only" />
+          <span>A ∩ B - Intersection</span>
+        </div>
+        <textarea id="intersection" name="w3review" rows="20" cols="50"></textarea>
+      </div>
+      <div class="div6">
+
+        <div class="list-title">
+          <img src="./union.png" alt="Difference - 1 only" />
+          <span>A ∪ B - Union</span>
+        </div>
+        <textarea id="union" name="w3review" rows="20" cols="50"></textarea>
+      </div>
+      <div class="div7">
+        <div>
+
+          <div class="list-title">
+            <img src="./symmetric-difference.png" alt="Difference - 1 only" />
+            <span>Δ - Symmetric difference</span>
+          </div>
+        </div>
+        <textarea id="symmetric_difference" name="w3review" rows="20" cols="50"></textarea>
+      </div>
+    </div>
+  </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    list_1 = document.getElementById("list_1");
+    list_2 = document.getElementById("list_2");
+    one_only = document.getElementById("one_only");
+    two_only = document.getElementById("two_only");
+    intersection = document.getElementById("intersection");
+    union = document.getElementById("union");
+    symmetric_difference = document.getElementById("symmetric_difference");
+
+    let list_a = "";
+    let list_b = "";
+
+    list_1.addEventListener("input", function (event) {
+      list_a = event.target.value.split("\n");
+      calculate(list_a, list_b);
+    });
+
+    list_2.addEventListener("input", function (event) {
+      list_b = event.target.value.split("\n");
+      calculate(list_a, list_b);
+    });
+
+    function calculate(list_1, list_2) {
+      // Remove empty strings
+      list_1 = list_1.filter((x) => x.trim() !== "");
+      list_2 = list_2.filter((x) => x.trim() !== "");
+
+      // Intersection
+      let _intersection = list_1.filter((x) => list_2.includes(x));
+
+      // Only in list 1
+      let _one_only = list_1.filter((x) => !list_2.includes(x));
+
+      // Only in list 2
+      let _two_only = list_2.filter((x) => !list_1.includes(x));
+
+      // Union (all unique elements)
+      let _union = [...new Set([...list_1, ...list_2])];
+
+      // Symmetric difference (elements in either list, but not both)
+      let _symmetric_difference = [..._one_only, ..._two_only];
+
+      // Set the textarea values (joined with newline for good readability)
+      intersection.value = _intersection.join("\n");
+      one_only.value = _one_only.join("\n");
+      two_only.value = _two_only.join("\n");
+      union.value = _union.join("\n");
+      symmetric_difference.value = _symmetric_difference.join("\n");
+    }
+  });
+
+</script>
+
+</body>
+
+</html>
